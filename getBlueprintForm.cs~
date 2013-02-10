@@ -1,0 +1,387 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+using NWN2Toolset.NWN2.Views;
+using NWN2Toolset.NWN2.Data.Blueprints;
+using NWN2Toolset.NWN2.Data.TypedCollections;
+using NWN2Toolset.NWN2.Data;
+
+namespace QuestMaker
+    {
+    public partial class getBlueprint : Form
+        {
+        private Dictionary<String, AreaContainer> MainContainer;
+        private AreaContainer campaginContainer;
+        private AreaContainer moduleContainer;
+        LinkedList<Actor> actorList;
+        static public getBlueprint getPrint;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        private getBlueprint()
+            {
+            InitializeComponent();
+
+            var module = NWN2Toolset.NWN2ToolsetMainForm.App.Module;
+
+            #region Check Handlers
+            checkBlueprints.CheckedChanged += new EventHandler(updateBlueprintRows);
+            checkInstances.CheckedChanged += new EventHandler(updateBlueprintRows);
+
+            checkCreatures.CheckedChanged += new EventHandler(updateBlueprintRows);
+            checkDoors.CheckedChanged += new EventHandler(updateBlueprintRows);
+            checkPlacables.CheckedChanged += new EventHandler(updateBlueprintRows);
+            checkItems.CheckedChanged += new EventHandler(updateBlueprintRows);
+            checkTriggers.CheckedChanged += new EventHandler(updateBlueprintRows);
+            #endregion
+
+            MainContainer = new Dictionary<string, AreaContainer>();
+            dataGridArea.RowCount = 1 + module.Areas.Count;
+            dataGridArea["AreaTag", 0].Value = "All areas";
+            dataGridArea["Used", 0].Value = true;
+            dataGridArea.CellClick += new DataGridViewCellEventHandler(checkDataGrid);
+
+            campaginContainer = new AreaContainer();
+            moduleContainer = new AreaContainer(module);
+
+            AreaContainer cont;
+            int i = 1;
+            foreach (NWN2GameArea area in module.Areas.Values)
+                {
+                area.Demand();
+                cont = new AreaContainer(area);
+                dataGridArea["AreaTag", i].Value = area.Tag;
+                dataGridArea["Used", i].Value = false;
+                dataGridArea["Area", i].Value = cont;
+                MainContainer.Add(cont.tag, cont);
+                i++;
+                }
+            }
+
+        /// <summary>
+        /// Update the blueprint rows to the new filter choices
+        /// </summary>
+        private void updateBlueprintRows()
+            {
+            dataBlueprints.Rows.Clear();
+            int count = 0;
+
+            // I find the areas that I need to update
+            if (checkInstances.Checked)
+                {
+                LinkedList<AreaContainer> areas = new LinkedList<AreaContainer>();
+                if ((bool)dataGridArea["Used", 0].Value)
+                    {
+                    AreaContainer[] area = new AreaContainer[MainContainer.Count];
+                    MainContainer.Values.CopyTo(area, 0);
+                    areas = new LinkedList<AreaContainer>(area);
+                    }
+                else
+                    {
+                    for (int i = 1; i < dataGridArea.RowCount; i++)
+                        {
+                        if ((bool)dataGridArea["Used", i].Value)
+                            {
+                            debug("Add nr. " + i);
+                            areas.AddLast((AreaContainer)dataGridArea["Area", i].Value);
+                            }
+                        }
+                    }
+
+                if (checkInstances.Checked)
+                    {
+                    String tag;
+                    foreach (AreaContainer contain in areas)
+                        {
+                        tag = contain.tag;
+                        if (checkCreatures.Checked)
+                            insertActors(contain.creaturePrints, tag, false, ref count);
+                        if (checkItems.Checked)
+                            insertActors(contain.itemPrints, tag, false, ref count);
+                        if (checkTriggers.Checked)
+                            insertActors(contain.triggerPrints, tag, false, ref count);
+                        if (checkDoors.Checked)
+                            insertActors(contain.doorPrints, tag, false, ref count);
+                        if (checkPlacables.Checked)
+                            insertActors(contain.placePrints, tag, false, ref count);
+                        }
+                    }
+                }
+
+            if (checkCampagin.Checked)
+                singleActorContain(campaginContainer, ref count);
+            if (checkModule.Checked)
+                singleActorContain(moduleContainer, ref count);
+
+            /*
+            void itemGridView_SelectionChanged(object sender, EventArgs e)
+                {
+                DataGridView dataGridView = (DataGridView)sender;
+                updatePropertyGrid(dataGridView);
+                }
+
+            private void updatePropertyGrid(DataGridView dataGridView)
+                {
+                if (dataGridView.CurrentRow == null || !dataGridView.CurrentRow.Visible)
+                    {
+                    dataGridView.ClearSelection();
+                    propertyGrid.SelectedObjects = new object[] { };
+                    propertyGrid.RefreshGrid();
+                    return;
+                    }
+                NWN2ItemBlueprint itemBlueprint = (NWN2ItemBlueprint)dataGridView.CurrentRow.Cells["Blueprint"].Value;
+                //displayMessage("> Showing Item: " + dataGridView.CurrentRow.Cells["ItemName"].Value.ToString());
+                if (showingFilters)
+                    {
+                    showingFilters = false;
+                    propertyGrid.Dock = DockStyle.Fill;
+                    propertyGrid.Minimal = false;
+                    propertyGrid.ShowPreview = true;
+                    inventoryManagerSplitContainer.Panel2.Controls.Clear();
+                    inventoryManagerSplitContainer.Panel2.Controls.Add(propertyGrid);
+                    }
+                propertyGrid.SelectedObjects = new object[] { itemBlueprint };
+                propertyGrid.RefreshGrid();
+                }
+            */
+
+            }
+
+        /// <summary>
+        /// Adds a Area containers blueprints to the blueprint list
+        /// </summary>
+        /// <param name="contain">The area container which contains the actors we are going to add to the blueprint list</param>
+        /// <param name="count">The number of items in the list</param>
+        void singleActorContain(AreaContainer contain, ref int count)
+            {
+            if (checkCreatures.Checked)
+                insertActors(contain.creaturePrints, contain.tag, true, ref count);
+            if (checkItems.Checked)
+                insertActors(contain.itemPrints, contain.tag, true, ref count);
+            if (checkTriggers.Checked)
+                insertActors(contain.triggerPrints, contain.tag, true, ref count);
+            if (checkDoors.Checked)
+                insertActors(contain.doorPrints, contain.tag, true, ref count);
+            if (checkPlacables.Checked)
+                insertActors(contain.placePrints, contain.tag, true, ref count);
+            }
+
+        /// <summary>
+        /// Updates the list of blueprints to fit with the current current filters
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void updateBlueprintRows(object sender, EventArgs e)
+            {
+            updateBlueprintRows();
+            }
+
+        /// <summary>
+        /// Happens when you click on a specific area
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void checkDataGrid(object sender, DataGridViewCellEventArgs e)
+            {
+            DataGridViewCheckBoxCell cell =
+                (DataGridViewCheckBoxCell)dataGridArea.Rows[e.RowIndex].Cells[2];
+            cell.Value = !((bool)cell.Value);
+            debug("At row " + e.RowIndex + ", we now have the value " + cell.Value.ToString());
+
+            if (((bool)cell.Value && e.RowIndex != 0))
+                {
+                dataGridArea["Used", 0].Value = false;
+                }
+
+            updateBlueprintRows();
+            }
+
+        /// <summary>
+        /// Inserts actors into the grid - either from instances or blueprints
+        /// </summary>
+        /// <param name="actors">The actors we need to add</param>
+        /// <param name="area">The name of the area</param>
+        /// <param name="blueprint">If blueprint is true, then we are working with a blueprint, else it is a instance</param>
+        /// <param name="count">The count of the items in the grid</param>
+        private void insertActors(LinkedList<Actor> actors, String area, bool blueprint, ref int count)
+            {
+            if (actors != null && actors.Count > 0)
+                {
+                dataBlueprints.RowCount += actors.Count;
+                foreach (Actor actor in actors)
+                    {
+                    dataBlueprints["printName", count].Value = actor.ToString();
+                    dataBlueprints["printTag", count].Value = actor.Tag;
+                    dataBlueprints["printArea", count].Value = area;
+                    if (blueprint)
+                        {
+                        dataBlueprints["InstanceBlueprint", count].Value = "Blueprint";
+                        }
+                    else
+                        {
+                        dataBlueprints["InstanceBlueprint", count].Value = "Instance";
+                        }
+                    dataBlueprints["Blueprint", count].Value = actor;
+                    count++;
+                    }
+                }
+            }
+
+        /// <summary>
+        /// Sets which filters are enabled and checked
+        /// </summary>
+        /// <param name="whatWeWant">The type we want to select in this session</param>
+        private void setWhatWeWant(EnumTypes.actorType whatWeWant)
+            {
+            if ((whatWeWant & EnumTypes.actorType.Creature) == EnumTypes.actorType.Creature)
+                {
+                checkCreatures.Enabled = true;
+                checkCreatures.Checked = true;
+                }
+
+            if ((whatWeWant & EnumTypes.actorType.Door) == EnumTypes.actorType.Door)
+                {
+                checkDoors.Enabled = true;
+                checkDoors.Checked = true;
+                }
+
+            if ((whatWeWant & EnumTypes.actorType.Item) == EnumTypes.actorType.Item)
+                {
+                checkItems.Enabled = true;
+                checkItems.Checked = true;
+                }
+
+            if ((whatWeWant & EnumTypes.actorType.Placeable) == EnumTypes.actorType.Placeable)
+                {
+                checkPlacables.Enabled = true;
+                checkPlacables.Checked = true;
+                }
+
+            if ((whatWeWant & EnumTypes.actorType.TriggerRegion) == EnumTypes.actorType.TriggerRegion)
+                {
+                checkTriggers.Enabled = true;
+                checkTriggers.Checked = true;
+                }
+
+            updateBlueprintRows();
+            }
+
+        /// <summary>
+        /// Gets the getBlueprintForm. This uses the singleton pattern.
+        /// </summary>
+        /// <param name="whatWeWant">The type we are interested in</param>
+        /// <returns>Returns the getPrint (the getBlueprintForm)</returns>
+        static public getBlueprint getBlue(EnumTypes.actorType whatWeWant)
+            {
+            if (getPrint == null)
+                {
+                getPrint = new getBlueprint();
+                }
+            getPrint.setWhatWeWant(whatWeWant);
+            return getPrint;
+            }
+
+        /// <summary>
+        /// Resets the getPrint value, so any future call will remake the list of actors
+        /// </summary>
+        static public void resetBlueprintForm()
+            {
+            getPrint = null;
+            }
+
+        /// <summary>
+        /// The OK button - which saves the selected blueprints, so that they can be retrived by Quest main
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button1_Click(object sender, EventArgs e)
+            {
+            Actor tempAct;
+            var rowCollection = dataBlueprints.SelectedRows;
+            actorList = new LinkedList<Actor>();
+            foreach (DataGridViewRow row in rowCollection)
+                {
+                tempAct = (Actor)row.Cells["Blueprint"].Value;
+                actorList.AddLast(tempAct);
+                }
+            //  report("Actorlist count: " + actorList.Count.ToString());
+            DialogResult = DialogResult.OK;
+            reset();
+            this.Close();
+            }
+
+        /// <summary>
+        /// The cancel button - resets the filters and closes the form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button2_Click(object sender, EventArgs e)
+            {
+            reset();
+            this.Close();
+            }
+
+        /// <summary>
+        /// Returns the choosen list of actors to the QuestMain
+        /// </summary>
+        /// <returns>The list of actors to be returned to the QuestMain form</returns>
+        public LinkedList<Actor> getBlueprints()
+            {
+            return actorList;
+            }
+
+        /// <summary>
+        /// Resets the form when the system shuts down - in order not have invalid values in the next run
+        /// </summary>
+        private void reset()
+            {
+            checkCreatures.Enabled = false;
+            checkCreatures.Checked = false;
+
+            checkDoors.Enabled = false;
+            checkDoors.Checked = false;
+
+            checkItems.Enabled = false;
+            checkItems.Checked = false;
+
+            checkPlacables.Enabled = false;
+            checkPlacables.Checked = false;
+
+            checkTriggers.Enabled = false;
+            checkTriggers.Checked = false;
+            }
+
+        /// <summary>
+        /// Prints a string to the user
+        /// </summary>
+        /// <param name="str">The string to print</param>
+        private void report(String str)
+            {
+            System.Windows.Forms.MessageBox.Show(str);
+            }
+
+        /// <summary>
+        /// Sets whether checkModule and checkCampagin is enabled or not
+        /// </summary>
+        private void checkBlueprints_CheckedChanged(object sender, EventArgs e)
+            {
+            checkModule.Enabled = checkBlueprints.Checked && checkBlueprints.Enabled;
+            checkCampagin.Enabled = checkBlueprints.Checked && checkBlueprints.Enabled;
+            }
+
+        /// <summary>
+        /// Print a debug message to the console
+        /// </summary>
+        /// <param name="str">The string to print to the console</param>
+        private void debug(String str)
+            {
+            System.Console.WriteLine(str);
+            }
+        }
+    }

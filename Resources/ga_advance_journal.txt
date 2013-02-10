@@ -1,0 +1,12 @@
+void main()
+{
+	int XP = GetLocalInt(OBJECT_SELF, "XP");
+	object oPC = GetFirstPC(TRUE);
+	if (XP != 0) {
+		GiveXPToCreature(oPC, XP);
+	}
+	
+	string journalEntry = GetLocalString(OBJECT_SELF, "JournalUpdate");	
+	int id = GetLocalInt(OBJECT_SELF, "nextState");
+	AddJournalQuestEntry(journalEntry, id, oPC, TRUE, FALSE, FALSE); 
+}

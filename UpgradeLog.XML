@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="QuestMaker">
+</Property><Property Name="Solution File" Value="C:\Documents and Settings\testy\Dokumenter\SharpDevelop Projects\QuestMaker\QuestMaker.sln">
+</Property><Property Name="Date" Value="17. februar 2008">
+</Property><Property Name="Time" Value="23:23">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="QuestMaker.sln" Description="File successfully backed up as C:\Documents and Settings\testy\Dokumenter\SharpDevelop Projects\QuestMaker\Backup\QuestMaker.sln">
+</Event><Event ErrorLevel="0" Project="QuestMaker" Source="QuestMaker.csproj" Description="Project file successfully backed up as C:\Documents and Settings\testy\Dokumenter\SharpDevelop Projects\QuestMaker\Backup\QuestMaker.csproj">
+</Event><Event ErrorLevel="0" Project="QuestMaker" Source="AssemblyInfo.cs" Description="File successfully backed up as C:\Documents and Settings\testy\Dokumenter\SharpDevelop Projects\QuestMaker\Backup\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="QuestMaker" Source="PlotNode.cs" Description="File successfully backed up as C:\Documents and Settings\testy\Dokumenter\SharpDevelop Projects\QuestMaker\Backup\PlotNode.cs">
+</Event><Event ErrorLevel="0" Project="QuestMaker" Source="QuestMaker.cs" Description="File successfully backed up as C:\Documents and Settings\testy\Dokumenter\SharpDevelop Projects\QuestMaker\Backup\QuestMaker.cs">
+</Event><Event ErrorLevel="0" Project="QuestMaker" Source="QuestMain.cs" Description="File successfully backed up as C:\Documents and Settings\testy\Dokumenter\SharpDevelop Projects\QuestMaker\Backup\QuestMain.cs">
+</Event><Event ErrorLevel="0" Project="QuestMaker" Source="QuestMain.Designer.cs" Description="File successfully backed up as C:\Documents and Settings\testy\Dokumenter\SharpDevelop Projects\QuestMaker\Backup\QuestMain.Designer.cs">
+</Event><Event ErrorLevel="0" Project="QuestMaker" Source="QuestMain.resx" Description="File successfully backed up as C:\Documents and Settings\testy\Dokumenter\SharpDevelop Projects\QuestMaker\Backup\QuestMain.resx">
+</Event><Event ErrorLevel="0" Project="QuestMaker" Source="QuestMaker.resx" Description="File successfully backed up as C:\Documents and Settings\testy\Dokumenter\SharpDevelop Projects\QuestMaker\Backup\QuestMaker.resx">
+</Event><Event ErrorLevel="0" Project="QuestMaker" Source="QuestMaker.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="QuestMaker" Source="QuestMaker.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="QuestMaker.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="QuestMaker.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="QuestMaker" Source="QuestMaker.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

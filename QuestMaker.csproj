@@ -1,0 +1,127 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{69A7EA1B-BEF3-40C8-ABD8-D0D95E51582E}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>QuestMaker</RootNamespace>
+    <AssemblyName>QuestMaker</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>..\..\Plug-ins\Compiled\</OutputPath>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>
+    </DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
+  <ItemGroup>
+    <Reference Include="DotNetMagic2005, Version=5.0.1.0, Culture=neutral, PublicKeyToken=6bb96f3d82daa243, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Programmer\Atari\Neverwinter Nights 2\DotNetMagic2005.dll</HintPath>
+    </Reference>
+    <Reference Include="NWN2Toolset, Version=1.0.1409.0, Culture=neutral, PublicKeyToken=6bb96f3d82daa243, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Programmer\Atari\Neverwinter Nights 2\NWN2Toolset.dll</HintPath>
+    </Reference>
+    <Reference Include="OEIShared, Version=1.0.1409.0, Culture=neutral, PublicKeyToken=6bb96f3d82daa243, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Programmer\Atari\Neverwinter Nights 2\OEIShared.dll</HintPath>
+    </Reference>
+    <Reference Include="SandBar, Version=1.3.4.1, Culture=neutral, PublicKeyToken=75b7ec17dd7c14c3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Programmer\Atari\Neverwinter Nights 2\SandBar.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Actor.cs" />
+    <Compile Include="ModfiyNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModfiyNew.Designer.cs">
+      <DependentUpon>ModfiyNew.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AreaContainer.cs" />
+    <Compile Include="EnumTypes.cs" />
+    <Compile Include="getBlueprintForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="getBlueprintForm.Designer.cs">
+      <DependentUpon>getBlueprintForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Quest.cs" />
+    <Compile Include="QuestMaker.cs" />
+    <Compile Include="QuestMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="QuestMain.Designer.cs">
+      <DependentUpon>QuestMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StoryNode.cs" />
+    <Compile Include="StoryNodeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StoryNodeForm.Designer.cs">
+      <DependentUpon>StoryNodeForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="getBlueprintForm.resx">
+      <DependentUpon>getBlueprintForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModfiyNew.resx">
+      <DependentUpon>ModfiyNew.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QuestMain.resx">
+      <DependentUpon>QuestMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QuestMaker.resx">
+      <DependentUpon>QuestMaker.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StoryNodeForm.resx">
+      <DependentUpon>StoryNodeForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ga_advance_journal.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ga_door_talk.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ga_say_string_advance.txt" />
+  </ItemGroup>
+</Project>

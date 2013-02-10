@@ -1,0 +1,42 @@
+#include "ginc_var_ops"
+
+void main()
+{
+	object oPC = GetEnteringObject();
+	int isPC = GetIsPC(oPC) || GetIsOwnedByPlayer(oPC);
+	if (!isPC) {
+		return;
+	}
+	
+	string compare1 = GetLocalString(OBJECT_SELF, "condition");
+	
+	int value = GetLocalInt(OBJECT_SELF, "nextState");
+	string compare2 = "<" + IntToString(value);
+
+	string message = GetLocalString(OBJECT_SELF, "message");
+
+	int negate = GetLocalInt(OBJECT_SELF, "negate");
+		
+	string questTag = GetLocalString(OBJECT_SELF, "JournalUpdate"); 
+	
+	int iQuestEntry = GetLocalInt(oPC, "NW_JOURNAL_ENTRY" + questTag);
+ 
+	int result1 = 0;
+	if (compare1 != "") {
+		result1 = CompareInts(iQuestEntry, compare1);		
+		if (negate) {
+		result1 = !result1;
+		}
+	} else {
+		result1 = 1;
+	}
+	int result2 = CompareInts(iQuestEntry, compare2);
+											
+	if (result1 && result2) {	
+		if (message != "")	
+			SendMessageToPC(oPC, message);
+		string script = GetLocalString(OBJECT_SELF, "script");
+		ExecuteScript(script, OBJECT_SELF);	
+	}
+	
+}

@@ -1,0 +1,11 @@
+// Talking script
+#include "ginc_debug"
+	
+void main()
+{
+	object oUser = GetClickingObject();
+	if(!GetIsDead(oUser))
+	{
+		ActionStartConversation(oUser);
+	}
+}
